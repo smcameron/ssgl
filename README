@@ -1,3 +1,11 @@
+Last updated: Wed Nov  3 19:48:13 CST 2010
+
+SSGL - Super Simple Game Lobby
+
+This code is extremely preliminary, undoubtedly buggy,
+and implements a made-up and still very fluid and fluctuating
+protocol and probably should not be used for any purpose at
+this time.
 
 SSGL - Super Simple Game Lobby
 
@@ -32,5 +40,17 @@ That's ALL it does.  This is a *Super Simple* game lobby system, after all.
 It does not have (nor need) fancy bells and whistles like built in chat
 programs, registered users, etc.
 
+To build:
 
- 
+Type "make"
+
+"ssgl_server" is the lobby server program.  It listens on tcp port 2419 for
+connections from gameserver and gameclients.
+
+"ssgl_gameserver_example" is a trivial example of a gameserver interacting
+with the ssgl_server.  It registers itself and periodically re-registers
+itself so as to not be dropped from the list.
+
+"ssgl_gameclient_example" is a trivial example of a gameclient.  It queries
+the lobbyserver for a list of gameservers, and and prints out what it 
+receives.
