@@ -21,7 +21,6 @@ static void usage()
 int main(int argc, char *argv[])
 {
 	int rc;
-	uint32_t ipaddr;
         int lobbysock;
 	struct ssgl_game_server gameserver;
 
@@ -30,9 +29,7 @@ int main(int argc, char *argv[])
 
 	memset(&gameserver, 0, sizeof(gameserver));
 
-	rc = ssgl_get_primary_host_ip_addr(&ipaddr);
-
-	gameserver.ipaddr = ipaddr; /* htonl needed here? */
+	gameserver.ipaddr = 0; /* lobby server will figure this out. */
 	gameserver.port = htonl(1234); /* whatever your game server's initial port is... */
 #define COPYINARG(field, arg) strncpy(gameserver.field, argv[arg], sizeof(gameserver.field) - 1)
 	COPYINARG(server_nickname, 1);

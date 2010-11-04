@@ -104,7 +104,9 @@ static void service_game_server(int connection)
 {
 	int rc;
 	int i;
-
+	struct sockaddr peer;
+	struct sockaddr_in *ip4addr;
+	unsigned int addrlen;
 	struct ssgl_game_server gs;
 
 	/* Get game server information */
@@ -114,6 +116,12 @@ static void service_game_server(int connection)
 
 	if (sanitize_game_server_entry(&gs))
 		return;
+
+	/* Get the game server's ip addr (don't trust what we were told.) */
+	memset(&gs.ipaddr, 0, sizeof(gs.ipaddr));
+	rc = getpeername(connection, &peer, &addrlen); 
+	ip4addr = (struct sockaddr_in *) &peer;
+	memcpy(&gs.ipaddr, &ip4addr->sin_addr, sizeof(gs.ipaddr));
 
 	/* Update directory with new info. */
 
