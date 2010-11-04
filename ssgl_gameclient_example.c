@@ -22,16 +22,16 @@ int main(int argc, char *argv[])
 	int game_server_count, rc, i;
 	int sock;
 
-	if (argc < 2)
+	if (argc < 3)
 		usage();
 
-	sock = ssgl_gameclient_connect_to_lobby("localhost");
+	sock = ssgl_gameclient_connect_to_lobby(argv[1]);
 	if (sock < 0) {
 		fprintf(stderr, "ssgl_connect_to_lobby failed: %s\n", strerror(errno));
 		exit(1);
 	}
 
-	strncpy(filter.game_type, argv[1], sizeof(filter.game_type)-1);
+	strncpy(filter.game_type, argv[2], sizeof(filter.game_type)-1);
 	printf("filtering games of type '%s'\n", filter.game_type);
 	do {
 		rc = ssgl_recv_game_servers(sock, &game_server, &game_server_count, &filter);
