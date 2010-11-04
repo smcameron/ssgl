@@ -10,6 +10,7 @@
 
 #include "ssgl.h"
 #include "ssgl_socket_io.h"
+#include "ssgl_protocol_id.h"
 
 static struct ssgl_protocol_id proto_id[] = {
 	{ -1, SSGL_SIGNATURE_STRING, SSGL_GAME_SERVER },

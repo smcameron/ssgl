@@ -13,7 +13,7 @@
 #include "ssgl.h"
 #include "ssgl_sanitize.h"
 #include "ssgl_socket_io.h"
-
+#include "ssgl_protocol_id.h"
 
 /* This is our directory of game servers, this is the data that we serve... */
 #define MAX_GAME_SERVERS 5000

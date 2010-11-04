@@ -14,16 +14,6 @@ struct ssgl_game_server {
 	char location[20]; 
 };
 
-struct ssgl_protocol_id {
-	uint32_t protocol_version; /* network byte order */
-#define SSGL_PROTOCOL_VERSION (htonl(1))
-	char signature[4];
-#define SSGL_SIGNATURE_STRING "SsGl"
-	char client_type; /* 's' for 'server', 'c' for 'client' */
-#define SSGL_GAME_SERVER 's'
-#define SSGL_GAME_CLIENT 'c'
-};
-
 struct ssgl_client_filter {
 	char game_type[15];
 };
