@@ -37,9 +37,9 @@ struct ssgl_client_filter {
 #define GLOBAL extern
 #endif
 
-GLOBAL int ssgl_gameserver_connect_to_lobby(char *hostname);
 GLOBAL int ssgl_gameclient_connect_to_lobby(char *hostname);
-GLOBAL int ssgl_register_gameserver(int socket, struct ssgl_game_server *gameserver);
+GLOBAL int ssgl_register_gameserver(char *lobbyhost, struct ssgl_game_server *gameserver,
+	pthread_t *lobby_thread);
 GLOBAL int ssgl_recv_game_servers(int sock,
 	struct ssgl_game_server **server_list, int *server_count,
 	struct ssgl_client_filter *filter);

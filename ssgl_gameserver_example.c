@@ -21,14 +21,14 @@ static void usage()
 int main(int argc, char *argv[])
 {
 	int rc;
-        int lobbysock;
 	struct ssgl_game_server gameserver;
+	pthread_t lobby_thread;
 
 	if (argc < 6)
 		usage();
 
+	/* Set up the game server structure that we will send to the lobby server. */
 	memset(&gameserver, 0, sizeof(gameserver));
-
 	gameserver.ipaddr = 0; /* lobby server will figure this out. */
 	gameserver.port = htonl(1234); /* whatever your game server's initial port is... */
 #define COPYINARG(field, arg) strncpy(gameserver.field, argv[arg], sizeof(gameserver.field) - 1)
@@ -37,23 +37,12 @@ int main(int argc, char *argv[])
 	COPYINARG(game_instance, 4);
 	COPYINARG(location, 5);
 
-	while (1) {
-		lobbysock = ssgl_gameserver_connect_to_lobby(argv[1]);
-		if (lobbysock < 0) {
-			fprintf(stderr, "ssgl_connect_to_lobby failed: %s\n", strerror(errno));
-			exit(1);
-		}
-
-		rc = ssgl_register_gameserver(lobbysock, &gameserver);
-		if (rc) {
-			fprintf(stderr, "ssgl_register_gameserver failed: %s\n", strerror(errno));
-			break;
-		}
-
-		shutdown(lobbysock, SHUT_RDWR);
-		close(lobbysock);
-
-		ssgl_sleep(SSGL_GAME_SERVER_TIMEOUT_SECS - 10);
-	}
+	/* create a thread to contact and update the lobby server... */
+	rc = ssgl_register_gameserver(argv[1], &gameserver, &lobby_thread);
+	
+	do {
+		/* do whatever it is that your game server does here... */
+		ssgl_sleep(5);
+	} while (1);
 	return 0;
 }

@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdint.h>
+#include <pthread.h>
 
 #include "ssgl.h"
 

@@ -8,6 +8,8 @@
 #endif
 
 GLOBAL int ssgl_connect_to_lobby(char *ssgl_hostname);
+GLOBAL int ssgl_gameserver_connect_to_lobby(char *ssgl_hostname);
+GLOBAL int ssgl_gameclient_connect_to_lobby(char *ssgl_hostname);
 
 #undef GLOBAL
 #endif
