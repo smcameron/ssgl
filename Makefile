@@ -23,6 +23,26 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 # 
 
+VERSION=0.1
+
+SRCS = ssgl_connect_to_lobby.c \
+	ssgl_gameclient_example.c \
+	ssgl_gameserver_example.c \
+	ssgl_get_primary_host_ip_addr.c \
+	ssgl_recv_game_servers.c \
+	ssgl_register_gameserver.c \
+	ssgl_sanitize.c \
+	ssgl_server.c \
+	ssgl_sleep.c \
+	ssgl_socket_io.c \
+	ssgl_connect_to_lobby.h \
+	ssgl.h \
+	ssgl_protocol_id.h \
+	ssgl_sanitize.h \
+	ssgl_socket_io.h
+
+TXTFILES = AUTHORS COPYING LICENSE README
+
 all:	ssgl_server ssgl_gameclient_example ssgl_gameserver_example
 
 libssglclient.a:	ssgl_sleep.o	ssgl_sanitize.o ssgl_recv_game_servers.o \
@@ -62,5 +82,12 @@ ssgl_gameclient_example:	ssgl.h ssgl_gameclient_example.c libssglclient.a
 ssgl_gameserver_example:	ssgl.h ssgl_gameserver_example.c libssglclient.a
 	gcc -g --pedantic -Wall -Werror -pthread -L. -o ssgl_gameserver_example ssgl_gameserver_example.c -lssglclient
 
+tarball: ${SRCS} ${TXTFILES} Makefile 
+	mkdir ssgl-${VERSION}
+	cp ${SRCS} ${TXTFILES} Makefile ssgl-${VERSION}
+	tar cvf ssgl-${VERSION}.tar ./ssgl-${VERSION}
+	gzip ssgl-${VERSION}.tar
+	rm -fr ./ssgl-${VERSION}
+
 clean:
-	rm -fr *.o ssgl_server ssgl_gameclient_example ssgl_gameserver_example libssglclient.a
+	rm -fr *.o ssgl_server ssgl_gameclient_example ssgl_gameserver_example libssglclient.a ssgl-${VERSION}.tar.gz
