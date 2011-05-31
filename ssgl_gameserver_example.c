@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 	/* Set up the game server structure that we will send to the lobby server. */
 	memset(&gameserver, 0, sizeof(gameserver));
 	gameserver.ipaddr = 0; /* lobby server will figure this out. */
-	gameserver.port = htonl(1234); /* whatever your game server's initial port is... */
+	gameserver.port = htons(1234); /* whatever your game server's initial port is... */
 #define COPYINARG(field, arg) strncpy(gameserver.field, argv[arg], sizeof(gameserver.field) - 1)
 	COPYINARG(server_nickname, 2);
 	COPYINARG(game_type, 3);

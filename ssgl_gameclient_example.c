@@ -29,7 +29,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 #include <string.h>
 #include <time.h>
 #include <errno.h>
-#include <arpa/inet.h> /* for ntohl */
+#include <arpa/inet.h> /* for ntohs */
 
 #include "ssgl.h"
 
@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
 			unsigned char *x = (unsigned char *) &game_server[i].ipaddr;
 			printf("%d.%d.%d.%d/%d %15s %20s %15s %20s\n",
 				x[0], x[1], x[2], x[3],
-				ntohl(game_server[i].port),
+				ntohs(game_server[i].port),
 				game_server[i].game_type,
 				game_server[i].game_instance,
 				game_server[i].server_nickname,

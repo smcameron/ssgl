@@ -33,7 +33,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 #pragma pack(1)
 struct ssgl_game_server {
 	uint32_t ipaddr;
-	uint32_t port;
+	uint16_t port;
 	char game_type[15];		/* What kind of game is this? */
 	char game_instance[20];		/* which instance on the server of the game */
 	char server_nickname[15];	/* server nickname where game is hosted */
