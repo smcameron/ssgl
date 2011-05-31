@@ -44,8 +44,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 #include "ssgl_connect_to_lobby.h"
 
 struct lobby_thread_arg {
-	struct ssgl_game_server *gameserver;
-	char *lobbyhost;
+	struct ssgl_game_server gameserver;
+	char lobbyhost[1000];
 };
 
 static void *update_lobby_thread(void *arg)
@@ -58,7 +58,7 @@ static void *update_lobby_thread(void *arg)
 	/* now move this to stack, and free malloc'ed memory. */
 	memset(lobbyhost, 0, sizeof(lobbyhost));
 	strncpy(lobbyhost, a->lobbyhost, 1023);
-	gameserver = *a->gameserver;
+	gameserver = a->gameserver;
 
 	free(arg);
 
@@ -88,8 +88,8 @@ int ssgl_register_gameserver(char *lobbyhost, struct ssgl_game_server *gameserve
 
 	/* Can't put this on the stack as the stack will be gone when thread needs it */
 	arg = malloc(sizeof(*arg));
-	arg->gameserver = gameserver;
-	arg->lobbyhost = lobbyhost;
+	arg->gameserver = *gameserver;
+	strncpy(arg->lobbyhost, lobbyhost, sizeof(arg->lobbyhost)-1);
 
 	rc = pthread_create(lobby_thread, NULL, update_lobby_thread, arg);
 	return rc;
