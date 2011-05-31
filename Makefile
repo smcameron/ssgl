@@ -64,7 +64,7 @@ ssgl_sanitize.o:	ssgl_sanitize.c ssgl_sanitize.h
 ssgl_recv_game_servers.o:	ssgl_recv_game_servers.c
 	gcc -g --pedantic -Wall -Werror -pthread -c ssgl_recv_game_servers.c
 
-ssgl_register_gameserver.o:	ssgl_register_gameserver.c
+ssgl_register_gameserver.o:	ssgl_register_gameserver.c ssgl_connect_to_lobby.h
 	gcc -g --pedantic -Wall -Werror -pthread -c ssgl_register_gameserver.c
 
 ssgl_get_primary_host_ip_addr.o:	ssgl_get_primary_host_ip_addr.c
