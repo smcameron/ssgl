@@ -61,6 +61,7 @@ GLOBAL int ssgl_recv_game_servers(int sock,
 	struct ssgl_client_filter *filter);
 
 GLOBAL void ssgl_sleep(int seconds); /* just a thread safe sleep implemented by nanosleep w/ retries */
+GLOBAL void ssgl_msleep(int milliseconds); /* just a thread safe sleep implemented by nanosleep w/ retries */
 GLOBAL int ssgl_get_primary_host_ip_addr(uint32_t *ipaddr);
 
 #undef GLOBAL

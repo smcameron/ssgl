@@ -51,3 +51,27 @@ void ssgl_sleep(int seconds)
 	} while (1);
 }
 
+/* a thread safe sleep function... */
+void ssgl_msleep(int milliseconds)
+{
+	int rc;
+	struct timespec req, rem;
+
+	req.tv_sec = milliseconds / 1000;
+	req.tv_nsec = 1000000L * (milliseconds - (req.tv_sec * 1000));
+	rem.tv_sec = 0;
+	rem.tv_nsec = 0;
+
+	do {
+		rc = nanosleep(&req, &rem);
+		if (rc == 0)
+			break;
+		if (rc < 0 && errno == -EINTR) {
+			req = rem;
+			rem.tv_sec = 0;
+			rem.tv_nsec = 0;
+			continue;
+		}
+	} while (1);
+}
+
