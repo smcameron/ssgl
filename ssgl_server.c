@@ -134,21 +134,34 @@ static void service_game_server(int connection)
 	struct sockaddr_in *ip4addr;
 	unsigned int addrlen;
 	struct ssgl_game_server gs;
+	unsigned char *x;
 
 	/* Get game server information */
 	rc = ssgl_readsocket(connection, &gs, sizeof(gs));
 	if (rc < 0)
 		return;
 
+	printf("1 gs.game_type = '%s', gs.port = %hu\n",gs.game_type, gs.port);
 	if (sanitize_game_server_entry(&gs))
 		return;
+	printf("2 gs.game_type = '%s'\n",gs.game_type);
 
 	/* Get the game server's ip addr (don't trust what we were told.) */
 	memset(&gs.ipaddr, 0, sizeof(gs.ipaddr));
+	addrlen = sizeof(peer);
 	rc = getpeername(connection, &peer, &addrlen); 
+	if (rc != 0) {
+		printf("getpeername failed: %s\n", strerror(errno));
+	}
+	printf("addrlen = %d\n", addrlen);
+	x = (unsigned char *) &peer;
+	for (i = 0; i < addrlen; i++)
+		printf("%02x ", x[i]);
+	printf("\n");
 	ip4addr = (struct sockaddr_in *) &peer;
 	memcpy(&gs.ipaddr, &ip4addr->sin_addr, sizeof(gs.ipaddr));
 
+	printf("3 gs.game_type = '%s'\n",gs.game_type);
 	/* Update directory with new info. */
 
 	ssgl_lock();
@@ -161,13 +174,16 @@ static void service_game_server(int connection)
 			goto out;
 		}
 	}
+	printf("4 gs.game_type = '%s'\n",gs.game_type);
 
 	if (ngame_servers >= MAX_GAME_SERVERS)
 		goto out; /* no room at the inn. */
 
+	printf("5 gs.game_type = '%s'\n",gs.game_type);
 	/* add the new game server info into the directory... */
 	game_server[ngame_servers] = gs;
 	update_expiration(ngame_servers);
+	printf("6 gs.game_type = '%s'\n",gs.game_type);
 	ngame_servers++;
 out:
 	ssgl_unlock();
@@ -235,6 +251,7 @@ static void service_game_client(int connection)
 			directory = malloc(sizeof(*directory) * ngame_servers);
 			memset(directory, 0, sizeof(*directory) * ngame_servers);
 			for (i = 0; i < ngame_servers; i++) {
+				printf("%d '%s' vs. '%s'\n", i, game_server[i].game_type, filter.game_type);
 				if (strcmp(game_server[i].game_type, filter.game_type) == 0) {
 					directory[nentries] = game_server[i];
 					nentries++;
@@ -244,7 +261,7 @@ static void service_game_client(int connection)
 send_the_data:
 		ssgl_unlock();
 
-		printf("ssgl_server: sending client count: %d\n", nentries);
+		printf("ssgl_server: sending client count: %d/%d\n", nentries, ngame_servers);
 		be_nentries = htonl(nentries);
 		rc = ssgl_writesocket(connection, &be_nentries, sizeof(be_nentries));
 		if (rc)
