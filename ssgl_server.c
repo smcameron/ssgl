@@ -351,25 +351,27 @@ int main(int argc, char *argv[])
 	/* Get the "gamelobby" service protocol/port */
 	gamelobby_service = getservbyname(GAMELOBBY_SERVICE_NAME, "tcp");
 	if (!gamelobby_service) {
-		fprintf(stderr, "getservyname failed, %s\n", strerror(errno));
-		exit(1);
+		fprintf(stderr, "getservbyname failed, %s\n", strerror(errno));
 	}
 
 	/* Get the protocol number... */
-	gamelobby_proto = getprotobyname(gamelobby_service->s_proto);
-	if (!gamelobby_proto) {
-		fprintf(stderr, "getprotobyname(%s) failed: %s\n", 
-			gamelobby_service->s_proto, strerror(errno));
-		exit(1);
+	if (gamelobby_service) {
+		gamelobby_proto = getprotobyname(gamelobby_service->s_proto);
+		if (!gamelobby_proto) {
+			fprintf(stderr, "getprotobyname(%s) failed: %s\n", 
+				gamelobby_service->s_proto, strerror(errno));
+		}
+	} else {
+		gamelobby_proto = NULL;
 	}
 
 	/* Make ourselves a socket */
-	rendezvous = socket(AF_INET, SOCK_STREAM, gamelobby_proto->p_proto);
+	rendezvous = socket(AF_INET, SOCK_STREAM, gamelobby_proto ? gamelobby_proto->p_proto : 0);
 
 	/* Bind the socket to "any address" on our port */
 	listen_address.sin_family = AF_INET;
 	listen_address.sin_addr.s_addr = INADDR_ANY;
-	listen_address.sin_port = gamelobby_service->s_port;
+	listen_address.sin_port = gamelobby_service ? gamelobby_service->s_port : GAMELOBBY_SERVICE_NUMBER;
 	rc = bind(rendezvous, (struct sockaddr *) &listen_address, sizeof(listen_address));
 	if (rc < 0) {
 		fprintf(stderr, "bind() failed: %s\n", strerror(errno));
